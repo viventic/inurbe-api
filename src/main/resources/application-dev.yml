@@ -1,0 +1,32 @@
+camel:
+  springboot:
+    # The Camel context name
+    name: CamelRestInurbe
+  component:
+    servlet:
+      mapping:
+        enabled: true
+        context-path: /api/*
+
+# Binding health checks to a different port
+# change actuator endpoints path
+management:
+  server:
+    port: 8081
+
+# disable all management enpoints except health
+endpoints:
+  enabled: false
+  health:
+    enabled: true
+
+spring:
+  # Spring JDBC configuration
+  datasource:
+    # Let Spring Boot auto-configure an embedded HSQL database
+    url:
+
+# The application configuration properties
+quickstart:
+  generateOrderPeriod: 2s
+  processOrderPeriod: 5s

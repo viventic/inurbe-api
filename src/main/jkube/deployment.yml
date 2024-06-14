@@ -1,0 +1,23 @@
+spec:
+  template:
+    spec:
+      containers:
+        - 
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 256Mi
+            limits:
+              cpu: "1.0"
+              memory: 256Mi
+          env:
+          - name: SPRING_APPLICATION_JSON
+            value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+          - name: ORACLE_SERVICE_NAME
+            value: oracle
+          - name: MYSQL_SERVICE_DATABASE
+            value: NOTARIADO
+          - name: ORACLE_SERVICE_USERNAME
+            value: ${oracle-service-username}
+          - name: ORACLE_SERVICE_PASSWORD
+            value: ${oracle-service-password}

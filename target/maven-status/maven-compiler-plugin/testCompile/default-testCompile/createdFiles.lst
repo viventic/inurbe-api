@@ -1,0 +1,6 @@
+io\fabric8\quickstarts\camel\support\KubernetesTestDeployer.class
+io\fabric8\quickstarts\camel\support\KubernetesTestUtil.class
+io\fabric8\quickstarts\camel\support\KubernetesTestDeployer$1.class
+io\fabric8\quickstarts\camel\support\KubernetesTestConfig.class
+io\fabric8\quickstarts\camel\KubernetesIntegrationKT.class
+io\fabric8\quickstarts\camel\support\KubernetesTestSetup.class

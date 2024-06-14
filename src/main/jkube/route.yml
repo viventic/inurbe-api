@@ -1,0 +1,7 @@
+
+apiVersion: "route.openshift.io/v1"
+kind: Route
+spec:
+  to:
+    kind: Service
+    name: inurpe-api-service

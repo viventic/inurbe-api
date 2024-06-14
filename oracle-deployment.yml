@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle
+  labels:
+    template: oracle-ephemeral
+spec:
+  ports:
+    - name: oracle
+      protocol: TCP
+      port: 1521
+      targetPort: 1521
+      nodePort: 0
+  selector:
+    name: oracle
+  type: ClusterIP
+  sessionAffinity: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: oracle
+      app: oracle
+  template:
+    metadata:
+      name: oracle
+      labels:
+        name: oracle
+    spec:
+      containers:
+      - image: oracle:5.6
+        name: oracle
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        env:
+        - name : ORACLE_USER
+          value: ${ORACLE_USER}
+        - name: ORACLE_PASSWORD
+          value: ${ORACLE_PASSWORD}
+        - name: ORACLE_DATABASE
+          value: ${ORACLE_DATABASE}
+        - name: ORACLE_RANDOM_ROOT_PASSWORD
+          value: 'yes'
+        volumeMounts:
+        - name: oracle-data
+          mountPath: /var/lib/oracle/data
+      volumes:
+      - name: oracle-data
+        emptyDir:
+          medium:
