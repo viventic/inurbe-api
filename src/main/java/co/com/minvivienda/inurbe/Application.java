@@ -42,7 +42,7 @@ public class Application {
         @Override
         public void configure() {
             restConfiguration()
-                .contextPath("/inurbe").apiContextPath("/api-doc")
+                .contextPath("/api").apiContextPath("/api-doc")
                     .apiProperty("api.title", "Camel REST API")
                     .apiProperty("api.version", "1.0")
                     .apiProperty("cors", "true")
@@ -52,44 +52,13 @@ public class Application {
                 .component("servlet")
                 .bindingMode(RestBindingMode.json);
             
-            rest("/expedientes").description("Books REST service")
-                .get("/").description("The list of all the books")
-                    .route().routeId("books-api")
-                    .to("sql:SELECT * FROM NOTARIADO.VW_EXPEDIENTES?" +
-                        "dataSource=dataSource&" +
-                        "outputClass=co.com.minvivienda.inurbe.Expediente")
-                    .endRest()
-                .get("/expediente/{id}").description("Details of an order by id")
-                    .route().routeId("order-api")
+            rest("/expedientes").description("Inurbe REST service")
+                .get("/{id}").description("Detalle de un expediente por Id")
+                    .route().routeId("inurbe-detalle-api")
                     .to("sql:SELECT * FROM NOTARIADO.VW_EXPEDIENTES WHERE EXPEDIENTE = :#${header.id}?" +
                         "dataSource=dataSource&outputType=SelectOne&" + 
                         "outputClass=co.com.minvivienda.inurbe.Expediente");
         }
     }
-
-    /*@Component
-    class Backend extends RouteBuilder {
-
-        @Override
-        public void configure() {
-            // A first route generates some orders and queue them in DB
-            from("timer:new-order?delay=1s&period={{quickstart.generateOrderPeriod:2s}}")
-                .routeId("generate-order")
-                .bean("orderService", "generateOrder")
-                .to("sql:insert into orders (id, item, amount, description, processed) values " +
-                    "(:#${body.id} , :#${body.item}, :#${body.amount}, :#${body.description}, false)?" +
-                    "dataSource=dataSource")
-                .log("Inserted new order ${body.id}");
-
-            // A second route polls the DB for new orders and processes them
-            from("sql:select * from orders where processed = false?" +
-                "consumer.onConsume=update orders set processed = true where id = :#id&" +
-                "consumer.delay={{quickstart.processOrderPeriod:5s}}&" +
-                "dataSource=dataSource")
-                .routeId("process-order")
-                .bean("orderService", "rowToOrder")
-                .log("Processed order #id ${body.id} with ${body.amount} copies of the «${body.description}» book");
-        }
-    }*/
 
 }

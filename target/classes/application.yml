@@ -6,7 +6,7 @@ camel:
     servlet:
       mapping:
         enabled: true
-        context-path: /inurbe/*
+        context-path: /api/*
 
 # Binding health checks to a different port
 # change actuator endpoints path
@@ -46,12 +46,7 @@ spring:
   datasource:
     username: ${oracle.service.username}
     password: ${oracle.service.password}
-    #url: jdbc:oraclexxx:thin:@//${${oracle.service.name}.service.host}:${${oracle.service.name}.service.port}/${oracle.service.database}
     url: jdbc:oracle:thin:@//${${oracle.service.name}.service.host}:${${oracle.service.name}.service.port}/${oracle.service.service-name}
   main:
     allow-bean-definition-overriding: true
 
-# The application configuration properties
-quickstart:
-  generateOrderPeriod: 10s
-  processOrderPeriod: 30s
