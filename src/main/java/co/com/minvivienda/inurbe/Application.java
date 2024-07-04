@@ -16,6 +16,9 @@
  */
 package co.com.minvivienda.inurbe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.boot.SpringApplication;
@@ -55,9 +58,54 @@ public class Application {
             rest("/expedientes").description("Inurbe REST service")
                 .get("/{id}").description("Detalle de un expediente por Id")
                     .route().routeId("inurbe-detalle-api")
-                    .to("sql:SELECT * FROM NOTARIADO.VW_EXPEDIENTES WHERE EXPEDIENTE = :#${header.id}?" +
+                    .to("sql:SELECT A.* FROM NOTARIADO.VW_EXPEDIENTES A WHERE EXPEDIENTE = :#${header.id}?" +
                         "dataSource=dataSource&outputType=SelectOne&" + 
-                        "outputClass=co.com.minvivienda.inurbe.Expediente");
+                        "outputClass=co.com.minvivienda.inurbe.Expediente")
+                    .endRest()
+            	.post("/list").description("Filtro de expedientes")
+	        		.produces("application/json").type(InputData.class)
+	        		.route().routeId("inurbe-list-api").to("direct:filterQuery")
+	        		.endRest();
+            
+            from("direct:filterQuery")
+            .log("Received POST request with body: ${body}")
+            .process(exchange -> {
+            	InputData input = exchange.getIn().getBody(InputData.class);
+                String query = "SELECT * FROM (SELECT A.*, ROWNUM rnum FROM (SELECT * FROM NOTARIADO.VW_EXPEDIENTES";
+            	List<String> params = new ArrayList<String>();
+            	
+            	if(input.getIdentificacion() != null) {
+            		params.add("CEDULA = '" + input.getIdentificacion() + "'");
+            	}
+            	if(input.getNombreSolicitante() != null) {
+            		params.add("UPPER(PETICIONARIO) LIKE '%" + input.getNombreSolicitante().toUpperCase() + "%'");
+            	}
+            	if(input.getExpediente() != null) {
+            		params.add("EXPEDIENTE = " + input.getExpediente());
+            	}
+            	if(input.getMatricula() != null) {
+            		params.add("UPPER(MATRICULA) LIKE '%" + input.getMatricula().toUpperCase() + "%'");
+            	}
+            	
+            	String criterios = "";
+            	if(!params.isEmpty()) {
+            		criterios = " WHERE (" + String.join(" OR ", params) + ") ";
+            	}
+            	
+        		query += criterios + " ORDER BY EXPEDIENTE DESC) A WHERE ROWNUM <= " + input.getFilaFin() + ") WHERE rnum >= " + input.getFilaIni();
+            	exchange.getOut().setHeader("SqlQuery", query);
+            })
+            .log("QUERY: ${header.SqlQuery}")
+            .to("direct:sqlRoute");
+            
+            
+            // Route to use the SQL query from header
+            from("direct:sqlRoute")
+                .setHeader("CamelSqlQuery", header("SqlQuery"))
+                .to("sql:dummy?" + 
+                    "dataSource=dataSource&outputType=SelectList&" + 
+                    "outputClass=co.com.minvivienda.inurbe.Expediente");
+            
         }
     }
 
