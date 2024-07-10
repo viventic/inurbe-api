@@ -46,16 +46,16 @@ public class Application {
         public void configure() {
             restConfiguration()
                 .contextPath("/api").apiContextPath("/api-doc")
-                    .apiProperty("api.title", "Camel REST API")
+                    .apiProperty("api.title", "INURBE REST API")
                     .apiProperty("api.version", "1.0")
-                    .apiProperty("cors", "true")
+                    .apiProperty("cors", "false")
                     .apiProperty("api.specification.contentType.json", "application/vnd.oai.openapi+json;version=2.0")
                     .apiProperty("api.specification.contentType.yaml", "application/vnd.oai.openapi;version=2.0")
                     .apiContextRouteId("doc-api")
                 .component("servlet")
                 .bindingMode(RestBindingMode.json);
             
-            rest("/expedientes").description("Inurbe REST service")
+            rest("/expedientes").description("Detalle de un expediente")
                 .get("/{id}").description("Detalle de un expediente por Id")
                     .route().routeId("inurbe-detalle-api")
                     .to("sql:SELECT A.* FROM NOTARIADO.VW_EXPEDIENTES A WHERE EXPEDIENTE = :#${header.id}?" +
@@ -63,8 +63,10 @@ public class Application {
                         "outputClass=co.com.minvivienda.inurbe.Expediente")
                     .endRest()
             	.post("/list").description("Filtro de expedientes")
-	        		.produces("application/json").type(InputData.class)
-	        		.route().routeId("inurbe-list-api").to("direct:filterQuery")
+	        		.produces("application/json")
+	        		.type(InputData.class)
+	        		.route().routeId("inurbe-list-api")
+	        		.to("direct:filterQuery")
 	        		.endRest();
             
             from("direct:filterQuery")
@@ -95,7 +97,7 @@ public class Application {
         		query += criterios + " ORDER BY EXPEDIENTE DESC) A WHERE ROWNUM <= " + input.getFilaFin() + ") WHERE rnum >= " + input.getFilaIni();
             	exchange.getOut().setHeader("SqlQuery", query);
             })
-            .log("QUERY: ${header.SqlQuery}")
+            .log("${header.SqlQuery}")
             .to("direct:sqlRoute");
             
             

@@ -1,5 +1,6 @@
 package co.com.minvivienda.inurbe;
 
+
 public class InputData {
 	
 	private Long identificacion;

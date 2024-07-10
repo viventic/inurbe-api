@@ -1,327 +1,317 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!-- Copyright 2005-2016 Red Hat, Inc. Red Hat licenses this file to you 
+	under the Apache License, version 2.0 (the "License"); you may not use this 
+	 file except in compliance with the License. You may obtain a copy of the 
+	License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by 
+	applicable law or agreed to in writing, software distributed under the License 
+	is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY 
+	KIND, either express or implied. See the License for the specific language 
+	governing permissions and limitations under the License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-     Copyright 2005-2016 Red Hat, Inc.
+	<modelVersion>4.0.0</modelVersion>
 
-     Red Hat licenses this file to you under the Apache License, version
-     2.0 (the "License"); you may not use this file except in compliance
-     with the License.  You may obtain a copy of the License at
+	<groupId>co.com.minvivienda.inurbe</groupId>
+	<artifactId>inurbe-api</artifactId>
+	<version>1.0.0</version>
 
-        http://www.apache.org/licenses/LICENSE-2.0
+	<name>Minvivienda :: INURBE :: Spring-Boot :: Camel XML</name>
+	<description>Spring Boot Service running a Camel route defined in XML</description>
 
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-     implied.  See the License for the specific language governing
-     permissions and limitations under the License.
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		<!-- Spring Boot default profile in order to use an embedded database -->
+		<run.profiles>dev</run.profiles>
 
-    <modelVersion>4.0.0</modelVersion>
+		<!-- configure the Fuse version you want to use here -->
+		<fuse.bom.version>7.12.0.fuse-7_12_0-00016-redhat-00001</fuse.bom.version>
+		<docker.image.version>1.13</docker.image.version>
 
-    <groupId>co.com.minvivienda.inurbe</groupId>
-    <artifactId>inurbe-api</artifactId>
-    <version>1.0.0</version>
+		<!-- maven plugin versions -->
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+	</properties>
 
-    <name>Minvivienda :: INURBE :: Spring-Boot :: Camel XML</name>
-    <description>Spring Boot Service running a Camel route defined in XML</description>
-	
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
-        <!-- Spring Boot default profile in order to use an embedded database -->
-        <run.profiles>dev</run.profiles>
-        
-        <!-- configure the Fuse version you want to use here -->
-        <fuse.bom.version>7.12.0.fuse-7_12_0-00016-redhat-00001</fuse.bom.version>
-        <docker.image.version>1.13</docker.image.version>
-        
-        <!-- maven plugin versions -->
-        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-    </properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.redhat-fuse</groupId>
+				<artifactId>fuse-springboot-bom</artifactId>
+				<version>${fuse.bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.redhat-fuse</groupId>
-                <artifactId>fuse-springboot-bom</artifactId>
-                <version>${fuse.bom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-servlet-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jackson-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-swagger-java-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-sql-starter</artifactId>
+		</dependency>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-servlet-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jackson-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-swagger-java-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-sql-starter</artifactId>
-        </dependency>
-        
-    	<!-- Oracle JDBC Driver -->
-	    <dependency>
-	        <groupId>com.oracle.database.jdbc</groupId>
-	        <artifactId>ojdbc8</artifactId>
-	        <version>19.8.0.0</version> <!-- Use the appropriate version for your project -->
-	    </dependency>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+		<!-- Oracle JDBC Driver -->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>19.8.0.0</version> <!-- Use the appropriate version for your project -->
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
-        <!-- Test -->
+		<!-- Test -->
 
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-model</artifactId>
-            <scope>test</scope>
-        </dependency>
-	 
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-client</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>io.fabric8</groupId>
+			<artifactId>kubernetes-model</artifactId>
+			<scope>test</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>openshift-client</artifactId>
-            <version>4.6.2</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>io.fabric8</groupId>
+			<artifactId>kubernetes-client</artifactId>
+			<scope>test</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-      </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-servlet-starter</artifactId>
-    </dependency>
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-http</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-http-common</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-http4</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-http4-starter</artifactId>
-      </dependency>
-      
-      
-    </dependencies>
+		<dependency>
+			<groupId>io.fabric8</groupId>
+			<artifactId>openshift-client</artifactId>
+			<version>4.6.2</version>
+			<scope>test</scope>
+		</dependency>
 
-    <build>
-        <defaultGoal>spring-boot:run</defaultGoal>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jboss.redhat-fuse</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${fuse.bom.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-servlet-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-http4-starter</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<defaultGoal>spring-boot:run</defaultGoal>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.redhat-fuse</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${fuse.bom.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 
-    <profiles>
-        <profile>
-            <id>openshift</id>
-            <properties>
-                <jkube.generator.from>registry.redhat.io/fuse7/fuse-java-openshift-rhel8:${docker.image.version}</jkube.generator.from>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jboss.redhat-fuse</groupId>
-                        <artifactId>openshift-maven-plugin</artifactId>
-                        <version>${fuse.bom.version}</version>
-                        <configuration>
-                            <enricher>
-                                <excludes>
-                                    <exclude>fmp-openshift-route</exclude>
-                                </excludes>
-                            </enricher>
-                            <resources>
-                                <labels>
-                                  <pod>
-                                    <property>
-                                      <name>com.company</name>
-                                      <value>Red_Hat</value>
-                                    </property>
-                                    <property>
-                                      <name>rht.prod_name</name>
-                                      <value>Red_Hat_Integration</value>
-                                    </property>
-                                    <property>
-                                      <name>rht.prod_ver</name>
-                                      <value>7.13.0</value>
-                                    </property>
-                                    <property>
-                                      <name>rht.comp</name>
-                                      <value>spring-boot-camel-xml</value>
-                                    </property>
-                                    <property>
-                                      <name>rht.comp_ver</name>
-                                      <value>${fuse.bom.version}</value>
-                                    </property>
-                                  </pod>
-                                </labels>
-                            </resources>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>resource</goal>
-                                    <goal>build</goal>
-                                    <goal>apply</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>java11</id>
-            <properties>
-                <jkube.generator.from>registry.redhat.io/fuse7/fuse-java-openshift-jdk11-rhel8:${docker.image.version}</jkube.generator.from>
-            </properties>
-            <activation>
-                <jdk>[11,17)</jdk>
-            </activation>
-        </profile>
-        <profile>
-            <id>java17</id>
-            <properties>
-                <jkube.generator.from>registry.redhat.io/fuse7/fuse-java-openshift-jdk17-rhel8:${docker.image.version}</jkube.generator.from>
-            </properties>
-            <activation>
-                <jdk>[17,)</jdk>
-            </activation>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>openshift</id>
+			<properties>
+				<jkube.generator.from>registry.redhat.io/fuse7/fuse-java-openshift-rhel8:${docker.image.version}</jkube.generator.from>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jboss.redhat-fuse</groupId>
+						<artifactId>openshift-maven-plugin</artifactId>
+						<version>${fuse.bom.version}</version>
+						<configuration>
+							<enricher>
+								<excludes>
+									<exclude>fmp-openshift-route</exclude>
+								</excludes>
+							</enricher>
+							<resources>
+								<labels>
+									<pod>
+										<property>
+											<name>com.company</name>
+											<value>Red_Hat</value>
+										</property>
+										<property>
+											<name>rht.prod_name</name>
+											<value>Red_Hat_Integration</value>
+										</property>
+										<property>
+											<name>rht.prod_ver</name>
+											<value>7.13.0</value>
+										</property>
+										<property>
+											<name>rht.comp</name>
+											<value>spring-boot-camel-xml</value>
+										</property>
+										<property>
+											<name>rht.comp_ver</name>
+											<value>${fuse.bom.version}</value>
+										</property>
+									</pod>
+								</labels>
+							</resources>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+									<goal>build</goal>
+									<goal>apply</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>java11</id>
+			<properties>
+				<jkube.generator.from>registry.redhat.io/fuse7/fuse-java-openshift-jdk11-rhel8:${docker.image.version}</jkube.generator.from>
+			</properties>
+			<activation>
+				<jdk>[11,17)</jdk>
+			</activation>
+		</profile>
+		<profile>
+			<id>java17</id>
+			<properties>
+				<jkube.generator.from>registry.redhat.io/fuse7/fuse-java-openshift-jdk17-rhel8:${docker.image.version}</jkube.generator.from>
+			</properties>
+			<activation>
+				<jdk>[17,)</jdk>
+			</activation>
+		</profile>
+	</profiles>
 
-    <repositories>
-        <repository>
-            <id>redhat-ga-repository</id>
-            <url>https://maven.repository.redhat.com/ga</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>redhat-ea-repository</id>
-            <url>https://maven.repository.redhat.com/earlyaccess/all</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>redhat-ga-repository</id>
+			<url>https://maven.repository.redhat.com/ga</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>redhat-ea-repository</id>
+			<url>https://maven.repository.redhat.com/earlyaccess/all</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>redhat-ga-repository</id>
-            <url>https://maven.repository.redhat.com/ga</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>redhat-ea-repository</id>
-            <url>https://maven.repository.redhat.com/earlyaccess/all</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>redhat-ga-repository</id>
+			<url>https://maven.repository.redhat.com/ga</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>redhat-ea-repository</id>
+			<url>https://maven.repository.redhat.com/earlyaccess/all</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>
