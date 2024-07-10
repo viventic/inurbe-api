@@ -45,19 +45,17 @@ public class Application {
         @Override
         public void configure() {
             restConfiguration()
-                .contextPath("/api").apiContextPath("/api-doc")
-                    .apiProperty("api.title", "INURBE REST API")
-                    .apiProperty("api.version", "1.0")
-                    .apiProperty("cors", "false")
-                    .apiProperty("api.specification.contentType.json", "application/vnd.oai.openapi+json;version=2.0")
-                    .apiProperty("api.specification.contentType.yaml", "application/vnd.oai.openapi;version=2.0")
-                    .apiContextRouteId("doc-api")
+                .contextPath("/api")
                 .component("servlet")
+                
                 .bindingMode(RestBindingMode.json);
             
             rest("/expedientes").description("Detalle de un expediente")
                 .get("/{id}").description("Detalle de un expediente por Id")
                     .route().routeId("inurbe-detalle-api")
+                    .process(exchange -> {
+                        exchange.getMessage().setHeader("Access-Control-Allow-Origin", "*");
+                    })
                     .to("sql:SELECT A.* FROM NOTARIADO.VW_EXPEDIENTES A WHERE EXPEDIENTE = :#${header.id}?" +
                         "dataSource=dataSource&outputType=SelectOne&" + 
                         "outputClass=co.com.minvivienda.inurbe.Expediente")
