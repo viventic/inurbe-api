@@ -59,6 +59,8 @@ public class Application {
                     .to("sql:SELECT A.* FROM NOTARIADO.VW_EXPEDIENTES A WHERE EXPEDIENTE = :#${header.id}?" +
                         "dataSource=dataSource&outputType=SelectOne&" + 
                         "outputClass=co.com.minvivienda.inurbe.Expediente")
+                    .setHeader("Access-Control-Allow-Origin", constant("*"))
+                    .setHeader("Access-Control-Allow-Headers", constant("Origin, X-Requested-With, Content-Type, Accept"))
                     .endRest()
             	.post("/list").description("Filtro de expedientes")
 	        		.produces("application/json")
