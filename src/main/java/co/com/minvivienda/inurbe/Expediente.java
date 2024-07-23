@@ -15,9 +15,16 @@
  */
 package co.com.minvivienda.inurbe;
 
-public class Expediente {
+import java.io.Serializable;
 
-    private int expediente;
+public class Expediente implements Serializable {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4917900085483709347L;
+
+	private int expediente;
     
     private String departamento;
     

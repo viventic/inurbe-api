@@ -11,10 +11,15 @@ public class InputData {
 	
 	private String matricula;
 	
-	private Long filaIni;
+	private Long pagina;
 	
-	private Long filaFin;
+	private Long filas;
+	
+	private String ordenarPor;
+	
+	private String orden;
 
+	
 	public Long getIdentificacion() {
 		return identificacion;
 	}
@@ -47,23 +52,36 @@ public class InputData {
 		this.matricula = matricula;
 	}
 
-	public Long getFilaIni() {
-		return filaIni;
+	public Long getPagina() {
+		return pagina;
 	}
 
-	public void setFilaIni(Long filaIni) {
-		this.filaIni = filaIni;
+	public void setPagina(Long pagina) {
+		this.pagina = pagina;
 	}
 
-	public Long getFilaFin() {
-		return filaFin;
+	public Long getFilas() {
+		return filas;
 	}
 
-	public void setFilaFin(Long filaFin) {
-		this.filaFin = filaFin;
+	public void setFilas(Long filas) {
+		this.filas = filas;
 	}
 
+	public String getOrdenarPor() {
+		return ordenarPor;
+	}
 
-	
+	public void setOrdenarPor(String ordenarPor) {
+		this.ordenarPor = ordenarPor;
+	}
+
+	public String getOrden() {
+		return orden;
+	}
+
+	public void setOrden(String orden) {
+		this.orden = orden;
+	}
 
 }
