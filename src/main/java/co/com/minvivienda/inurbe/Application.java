@@ -96,7 +96,7 @@ public class Application {
 	                }
 	                
 	                
-	                String orden = input.getOrden() == null ||  input.getOrden().isBlank() ? "ASC" : input.getOrden().toUpperCase();
+	                String orden = input.getOrden() == null ||  input.getOrden().trim().isEmpty() ? "ASC" : input.getOrden().toUpperCase();
 	                orden = orden.contains("ASC") || orden.contains("DESC") ? orden: "ASC";
 	                
 	                List<String> params = new ArrayList<String>();
