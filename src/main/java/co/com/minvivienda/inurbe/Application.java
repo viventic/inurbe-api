@@ -55,7 +55,9 @@ public class Application {
         @Override
         public void configure() {
             restConfiguration()
-                .contextPath("/api")
+    	    	.enableCORS(true)
+	    	    .corsHeaderProperty("Access-Control-Allow-Origin", "*")
+	    		.contextPath("/api")
                 .component("servlet")
                 .bindingMode(RestBindingMode.json);
             
