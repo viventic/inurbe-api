@@ -77,6 +77,7 @@ public class Application {
                         .setHeader("Content-Type", constant("application/json"))
                         .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
                     .setHeader("Access-Control-Allow-Origin", constant("*"))
+                    .setHeader("Access-Control-Allow-Headers", constant("Authorization, Content-Type"))
                     .endRest()
             	
                 .post("/list").description("Listado de expedientes paginados y con filtros")
@@ -86,6 +87,7 @@ public class Application {
 	        		.multicast(new ExpedientesAggregator())
 	        		.to("direct:filterQuery", "direct:totalCount")
 	        		.setHeader("Access-Control-Allow-Origin", constant("*"))
+	        		.setHeader("Access-Control-Allow-Headers", constant("Authorization, Content-Type"))
 	        		.endRest();
             
             //Consulta de expedientes paginados y con filtros
@@ -143,6 +145,7 @@ public class Application {
                 	List<Expediente> expedientes = new ArrayList<Expediente>();
                 	expedientes = exchange.getIn().getBody(expedientes.getClass());
                 	exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
+                	exchange.getIn().setHeader("Access-Control-Allow-Headers", constant("Authorization, Content-Type"));
                 	exchange.getIn().setBody(expedientes);
                 });
             
@@ -187,6 +190,7 @@ public class Application {
             	}
             	
             	exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
+            	exchange.getIn().setHeader("Access-Control-Allow-Headers", constant("Authorization, Content-Type"));
             	exchange.getIn().setBody(totalRows);
             });   
         }
