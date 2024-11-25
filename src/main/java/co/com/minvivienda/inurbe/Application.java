@@ -55,8 +55,8 @@ public class Application {
         @Override
         public void configure() {
             restConfiguration()
-	    		.enableCORS(false)
-	    		//.corsHeaderProperty("Access-Control-Allow-Origin", "*")
+	    		.enableCORS(true)
+	    		.corsHeaderProperty("Access-Control-Allow-Origin", "*")
 	    		.contextPath("/api")
                 .component("servlet")
                 .bindingMode(RestBindingMode.json);
@@ -76,6 +76,7 @@ public class Application {
                         .setBody(constant("{\"response\": \"error\", \"message\": \"No existe el expediente especificado\"}"))
                         .setHeader("Content-Type", constant("application/json"))
                         .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
+                    .setHeader("Access-Control-Allow-Origin", constant("*"))
                     .endRest()
             	
                 .post("/list").description("Listado de expedientes paginados y con filtros")
@@ -84,6 +85,7 @@ public class Application {
 	        		.route().routeId("inurbe-list-api")
 	        		.multicast(new ExpedientesAggregator())
 	        		.to("direct:filterQuery", "direct:totalCount")
+	        		.setHeader("Access-Control-Allow-Origin", constant("*"))
 	        		.endRest();
             
             //Consulta de expedientes paginados y con filtros
@@ -140,6 +142,7 @@ public class Application {
                 .process(exchange -> {
                 	List<Expediente> expedientes = new ArrayList<Expediente>();
                 	expedientes = exchange.getIn().getBody(expedientes.getClass());
+                	exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
                 	exchange.getIn().setBody(expedientes);
                 });
             
@@ -183,6 +186,7 @@ public class Application {
             		totalRows = rows.get(0).getTotalRows();
             	}
             	
+            	exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
             	exchange.getIn().setBody(totalRows);
             });   
         }
