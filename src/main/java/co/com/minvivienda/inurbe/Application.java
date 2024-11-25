@@ -78,8 +78,8 @@ public class Application {
                         .setBody(constant("{\"response\": \"error\", \"message\": \"No existe el expediente especificado\"}"))
                         .setHeader("Content-Type", constant("application/json"))
                         .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
-	                    .setHeader("Access-Control-Allow-Origin", constant("*"))
-	                    .setHeader("Access-Control-Allow-Headers", constant("Authorization"))
+	                    //.setHeader("Access-Control-Allow-Origin", constant("*"))
+	                    //.setHeader("Access-Control-Allow-Headers", constant("Authorization"))
                     .endRest()
             	
                 .post("/list").description("Listado de expedientes paginados y con filtros")
@@ -88,8 +88,8 @@ public class Application {
 	        		.route().routeId("inurbe-list-api")
 	        		.multicast(new ExpedientesAggregator())
 	        		.to("direct:filterQuery", "direct:totalCount")
-	        		.setHeader("Access-Control-Allow-Origin", constant("*"))
-	        		.setHeader("Access-Control-Allow-Headers", constant("Authorization"))
+	        		//.setHeader("Access-Control-Allow-Origin", constant("*"))
+	        		//.setHeader("Access-Control-Allow-Headers", constant("Authorization"))
 	        		.endRest();
             
             //Consulta de expedientes paginados y con filtros
@@ -146,8 +146,8 @@ public class Application {
                 .process(exchange -> {
                 	List<Expediente> expedientes = new ArrayList<Expediente>();
                 	expedientes = exchange.getIn().getBody(expedientes.getClass());
-                	exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
-                	exchange.getIn().setHeader("Access-Control-Allow-Headers", constant("Authorization"));
+                	//exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
+                	//exchange.getIn().setHeader("Access-Control-Allow-Headers", constant("Authorization"));
                 	exchange.getIn().setBody(expedientes);
                 });
             
@@ -191,8 +191,8 @@ public class Application {
             		totalRows = rows.get(0).getTotalRows();
             	}
             	
-            	exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
-            	exchange.getIn().setHeader("Access-Control-Allow-Headers", constant("Authorization"));
+            	//exchange.getIn().setHeader("Access-Control-Allow-Origin", constant("*"));
+            	//exchange.getIn().setHeader("Access-Control-Allow-Headers", constant("Authorization"));
             	exchange.getIn().setBody(totalRows);
             });   
         }
